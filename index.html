@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>计算机专业课术语词库</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+            background: #f5f7fb;
+            padding: 16px;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
+            color: #0f172a;
+            border-left: 6px solid #3b82f6;
+            padding-left: 1rem;
+        }
+
+        .subtitle {
+            color: #475569;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            padding-left: 0.5rem;
+        }
+
+        /* 控制栏：搜索和分类 */
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            width: 100%;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 40px;
+            outline: none;
+            background: white;
+            transition: 0.2s;
+        }
+
+        .search-box input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+
+        .filter-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .category-filter {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        .category-btn {
+            padding: 8px 16px;
+            border: none;
+            background: white;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transition: 0.2s;
+            border: 2px solid transparent;
+            white-space: nowrap;
+        }
+
+        .category-btn.active {
+            background: #3b82f6;
+            color: white;
+            box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+        }
+
+        .category-btn[data-category="all"]:not(.active) {
+            border-color: #cbd5e1;
+        }
+
+        .stats {
+            color: #64748b;
+            font-size: 0.9rem;
+            background: white;
+            padding: 6px 16px;
+            border-radius: 40px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            white-space: nowrap;
+        }
+
+        /* 卡片列表 — 纵向单列 */
+        .cards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        /* 卡片 */
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #eef2f6;
+            overflow: hidden;
+            transition: 0.2s;
+        }
+
+        /* 卡片头部（始终可见） */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 20px;
+            background: white;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .card-header:active {
+            background: #f8fafc;
+        }
+
+        .title-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .chinese-name {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .category-badge {
+            background: #e6f0ff;
+            color: #1e4a8b;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 50px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        .expand-icon {
+            font-size: 1.6rem;
+            color: #94a3b8;
+            transition: transform 0.2s;
+            width: 30px;
+            text-align: center;
+        }
+
+        .card.expanded .expand-icon {
+            transform: rotate(90deg);
+            color: #3b82f6;
+        }
+
+        /* 卡片详细内容（折叠/展开） */
+        .card-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: #ffffff;
+            border-top: 0 solid #e2e8f0;
+        }
+
+        .card.expanded .card-details {
+            max-height: 800px;  /* 足够容纳所有内容 */
+            border-top-width: 1px;
+            transition: max-height 0.4s ease-in;
+        }
+
+        .details-content {
+            padding: 0 20px 20px 20px;
+        }
+
+        .english-info {
+            background: #f8fafc;
+            padding: 14px 16px;
+            border-radius: 18px;
+            margin: 16px 0 16px;
+            border-left: 4px solid #94a3b8;
+        }
+
+        .english-full {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #1e293b;
+            word-break: break-word;
+        }
+
+        .section-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin: 16px 0 8px;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-title span {
+            background: #e2e8f0;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: #475569;
+        }
+
+        .def-box {
+            background: #f1f5f9;
+            padding: 14px 16px;
+            border-radius: 16px;
+            margin-bottom: 4px;
+        }
+
+        .def-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #1e293b;
+        }
+
+        .plain-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #2d3c4c;
+            background: #fff7ed;
+            padding: 14px 16px;
+            border-radius: 16px;
+            margin-bottom: 4px;
+            border-left: 4px solid #f97316;
+        }
+
+        .notes {
+            background: #ecfdf5;
+            padding: 14px 16px;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+            margin-top: 8px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 50px 20px;
+            background: white;
+            border-radius: 32px;
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            margin-top: 32px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📚 计算机术语</h1>
+    <div class="subtitle">点击词条展开详细解释</div>
+
+    <div class="controls">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 按中文名或备注搜索...">
+        </div>
+        <div class="filter-row">
+            <div class="category-filter" id="categoryFilter">
+                <button class="category-btn active" data-category="all">全部</button>
+                <button class="category-btn" data-category="计算机网络">🌐 网络</button>
+                <button class="category-btn" data-category="计算机组成原理">⚙️ 组成</button>
+            </div>
+            <div class="stats" id="stats">加载中...</div>
+        </div>
+    </div>
+
+    <div id="cardsContainer" class="cards-list">
+        <!-- 动态渲染卡片列表 -->
+    </div>
+    <footer>点击术语卡片展开详情 · 数据持续更新</footer>
+</div>
+
+<script>
+    let termsData = [];
+
+    // 加载JSON数据
+    fetch('terms.json')
+        .then(response => {
+            if (!response.ok) throw new Error('无法加载术语数据');
+            return response.json();
+        })
+        .then(data => {
+            termsData = data;
+            updateStats(termsData.length);
+            renderCards(termsData);
+        })
+        .catch(err => {
+            document.getElementById('cardsContainer').innerHTML = 
+                `<div class="no-results">❌ 加载失败：${err.message}<br><small>请确保 terms.json 文件存在</small></div>`;
+        });
+
+    // 当前筛选状态
+    let currentCategory = 'all';
+    let currentSearch = '';
+
+    // 获取筛选后的数据
+    function getFilteredData() {
+        return termsData.filter(item => {
+            if (currentCategory !== 'all' && item.category !== currentCategory) return false;
+            if (currentSearch.trim() !== '') {
+                const searchLower = currentSearch.toLowerCase();
+                const nameMatch = (item.display_name || '').toLowerCase().includes(searchLower);
+                const notesMatch = (item.notes || '').toLowerCase().includes(searchLower);
+                return nameMatch || notesMatch;
+            }
+            return true;
+        });
+    }
+
+    // 更新统计
+    function updateStats(count) {
+        document.getElementById('stats').innerText = `共 ${count} 条`;
+    }
+
+    // 切换卡片展开/折叠
+    function toggleCard(cardElement, id) {
+        if (cardElement.classList.contains('expanded')) {
+            cardElement.classList.remove('expanded');
+        } else {
+            // 可选：如果想同时只展开一个，可以在这里先关闭其他
+            // document.querySelectorAll('.card.expanded').forEach(c => c.classList.remove('expanded'));
+            cardElement.classList.add('expanded');
+        }
+    }
+
+    // 渲染卡片列表
+    function renderCards(data) {
+        const container = document.getElementById('cardsContainer');
+        if (!data.length) {
+            container.innerHTML = '<div class="no-results">📭 没有匹配的术语</div>';
+            return;
+        }
+
+        let html = '';
+        data.forEach((item, index) => {
+            // 生成一个唯一ID，用于可能的联动（这里没用但保留）
+            const itemId = `card-${index}-${Date.now()}`;
+            
+            html += `
+            <div class="card" data-id="${itemId}">
+                <div class="card-header" onclick="toggleCard(this.closest('.card'))">
+                    <div class="title-section">
+                        <span class="chinese-name">${escapeHtml(item.display_name || '')}</span>
+                        <span class="category-badge">${escapeHtml(item.category || '')}</span>
+                    </div>
+                    <span class="expand-icon">❯</span>
+                </div>
+                <div class="card-details">
+                    <div class="details-content">
+                        <div class="english-info">
+                            <div class="english-full">${escapeHtml(item.english_full || '')}</div>
+                        </div>
+                        <div class="section-title">📘 专业定义 <span>专业</span></div>
+                        <div class="def-box">
+                            <div class="def-text">${escapeHtml(item.professional_def || '')}</div>
+                        </div>
+                        <div class="section-title">🧠 通俗解释 <span>外行友好</span></div>
+                        <div class="plain-text">${escapeHtml(item.plain_explain || '')}</div>
+                        <div class="section-title">📌 备注</div>
+                        <div class="notes">${escapeHtml(item.notes || '无')}</div>
+                    </div>
+                </div>
+            </div>
+            `;
+        });
+
+        container.innerHTML = html;
+        updateStats(data.length);
+
+        // 全局暴露 toggle 函数（因为 onclick 里使用了它）
+        window.toggleCard = function(card) {
+            if (card.classList.contains('expanded')) {
+                card.classList.remove('expanded');
+            } else {
+                card.classList.add('expanded');
+            }
+        };
+    }
+
+    // 简单的转义，防止XSS
+    function escapeHtml(text) {
+        if (!text) return '';
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    // 事件监听：搜索
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        currentSearch = e.target.value;
+        const filtered = getFilteredData();
+        renderCards(filtered);
+    });
+
+    // 分类按钮点击
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            currentCategory = e.target.dataset.category;
+            const filtered = getFilteredData();
+            renderCards(filtered);
+        });
+    });
+</script>
+</body>
+</html>
