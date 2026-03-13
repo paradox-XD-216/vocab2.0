@@ -290,8 +290,7 @@
 </head>
 <body>
 <div class="container">
-    <h1>📚 计算机术语</h1>
-    <div class="subtitle">点击词条展开详细解释</div>
+    <h1>📚 计算机术语词库</h1>
 
     <div class="controls">
         <div class="search-box">
@@ -300,8 +299,8 @@
         <div class="filter-row">
             <div class="category-filter" id="categoryFilter">
                 <button class="category-btn active" data-category="all">全部</button>
-                <button class="category-btn" data-category="计算机网络">🌐 网络</button>
-                <button class="category-btn" data-category="计算机组成原理">⚙️ 组成</button>
+                <button class="category-btn" data-category="计算机网络">🌐 计算机网络</button>
+                <button class="category-btn" data-category="计算机组成原理">⚙️ 计算机组成原理</button>
             </div>
             <div class="stats" id="stats">加载中...</div>
         </div>
@@ -310,7 +309,7 @@
     <div id="cardsContainer" class="cards-list">
         <!-- 动态渲染卡片列表 -->
     </div>
-    <footer>点击术语卡片展开详情 · 数据持续更新</footer>
+    <footer> 数据持续更新</footer>
 </div>
 
 <script>
@@ -360,7 +359,6 @@
         if (cardElement.classList.contains('expanded')) {
             cardElement.classList.remove('expanded');
         } else {
-            // 可选：如果想同时只展开一个，可以在这里先关闭其他
             // document.querySelectorAll('.card.expanded').forEach(c => c.classList.remove('expanded'));
             cardElement.classList.add('expanded');
         }
@@ -450,4 +448,5 @@
     });
 </script>
 </body>
+
 </html>
